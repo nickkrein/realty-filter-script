@@ -1,8 +1,6 @@
 const data = require('./property_listings.json');
 var args = process.argv.slice(2);
 
-console.log(args)
-
 // if (args.length) {
 //     console.log("Please provide stateAbbrviation and minBaths as command line arguments.")
 // }
@@ -10,16 +8,36 @@ console.log(args)
 const stateAbbreviation = args[0];
 const minBaths = args[1];
 
-let filteredHouses = data.filter(filterHouses).sort(sortBySquareFootage)
-
-const filterHouses = (house) => {
+let filteredHouses = data.filter((house) => {
     return stateAbbreviation === house.administrativeAreaLevel1 && minBaths <= house.baths;
-};
-
-const sortBySquareFootage = ( a, b ) => {
+}).sort(( a, b ) => {
     return a.squareFeet - b.squareFeet;
-};
+});
 
-console.log(filteredHouses);
+let formattedHouses = filteredHouses.map((house) => {
+    return {
+        id: house.id,
+        addressLine1: house.street,
+        addressLine2: `${house.locality}, ${house.administrativeAreaLevel1} ${house.postalCode}`,
+        price: house.price,
+        squareFeet: house.squareFeet,
+        beds: house.beds,
+        baths: house.baths,
+    }
+})
 
-// console.log(data);
+console.log(formattedHouses);
+
+const calculateAveragePrice = () => {
+    let totalPrice = filteredHouses.map((house) => {
+        return Math.trunc(house.price * 100);
+    }).reduce((acc, curr) => {
+        return acc + curr;
+    }, 0);
+
+    return Math.round(totalPrice / filteredHouses.length) / 100;
+}
+
+let averagePrice = calculateAveragePrice();
+
+console.log(`Average Price: $${averagePrice}`)
