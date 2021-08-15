@@ -28,7 +28,7 @@ let formattedHouses = filteredHouses.map((house) => {
 
 console.log(formattedHouses);
 
-const calculateAveragePrice = () => {
+const calcAvgPrice = () => {
     let totalPrice = filteredHouses.map((house) => {
         return Math.trunc(house.price * 100);
     }).reduce((acc, curr) => {
@@ -38,6 +38,22 @@ const calculateAveragePrice = () => {
     return Math.round(totalPrice / filteredHouses.length) / 100;
 }
 
-let averagePrice = calculateAveragePrice();
+let avgPrice = calcAvgPrice();
 
-console.log(`Average Price: $${averagePrice}`)
+console.log(`Average Price: $${avgPrice}`)
+
+const calcAvgPricePerSqft = () => {
+    let pricesPerSqft = filteredHouses.map((house) => {
+        if (!house.price || !house.squareFeet) return null;
+        return Math.trunc(house.price * 100) / house.squareFeet;       
+    }).reduce((acc, curr) => {
+        return acc + curr;
+    }, 0);
+
+    return Math.round(pricesPerSqft / filteredHouses.length) / 100;
+}
+
+
+let avgPricePerSqft = calcAvgPricePerSqft();
+
+console.log(`Average Price per sqft: $${avgPricePerSqft}`);
