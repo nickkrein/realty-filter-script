@@ -29,6 +29,11 @@ let filteredHouses = data.filter((house) => {
     return a.squareFeet - b.squareFeet;
 });
 
+if (!filteredHouses.length) {
+    console.log("No results found. Try refining your search criteria.");
+    process.exit();
+}
+
 let formattedHouses = filteredHouses.map((house) => {
     return {
         id: house.id,
